@@ -1,0 +1,15 @@
+{
+  "private": true,
+  "dependencies": {
+    "@slidev/cli": "^0.48",
+    "@slidev/theme-default": "*",
+    "@slidev/theme-seriph": "*",
+    "slidev-theme-teach-rs": "0.0.1"
+  },
+  "name": "rust-for-the-web",
+  "scripts": {
+    "dev": "slidev index.md",
+    "build": "slidev build --out dist/index --base /slides/index.md"
+  },
+  "packageManager": "pnpm@10.6.1"
+}

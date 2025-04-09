@@ -9,19 +9,15 @@ drawings:
 fonts:
   mono: Fira Mono
 layout: cover
-title: "Rust - D: Trait objects and Rust patterns"
+title: 'Rust - D: Trait objects and Rust patterns'
 ---
-
 # Rust programming
-
 Module D: Trait objects and Rust patterns
-
 <!-- Start with welcome, students entering -->
 
 ---
-
-## layout: cover
-
+layout: cover
+---
 # In this module
 
 - Introducing dynamic dispatch
@@ -29,13 +25,10 @@ Module D: Trait objects and Rust patterns
 - Common anti-patterns to avoid
 
 ---
-
-## layout: default
-
+layout: default
+---
 # Learning objectives
-
 <!-- List this module's learning objectives -->
-
 - Understand the difference between static and dynamic dispatch
 - Be able to create trait objects
 - Understand the concept of 'object safety'
@@ -43,48 +36,41 @@ Module D: Trait objects and Rust patterns
 - Know which anti-patterns to avoid
 
 ---
-
-## layout: cover
-
-# Module D
-
+layout: cover
+---
+#  Module D
 Idiomatic Rust Patterns
-
 <!-- Start lecture content here -->
 
 ---
-
-## layout: default
-
+layout: default
+---
 # Content overview
-
 - Trait objects and dynamic dispatch
 - Rust design patterns
 - The deref polymorphism anti-pattern
 - Project intro
 
 ---
-
-## layout: section
-
+layout: section
+---
 # Trait objects & dynamic dispatch
 
 ---
-
-## layout: default
+layout: default
+---
 
 # Trait... Object?
-
 - We learned about traits in module A3
 - We learned about generics and `monomorphization`
 
 There's more to this story though...
 
-_Question: What was monomorphization again?_
+*Question: What was monomorphization again?*
 
 ---
-
-## layout: default
+layout: default
+---
 
 # Monomorphization: recap
 
@@ -106,18 +92,16 @@ fn main() {
 ```
 
 Code is <em>monomorphized</em>:
-
-- Two versions of `add_values` end up in binary
-- Optimized separately and very fast to run (static dispatch)
-- Slow to compile and larger binary
+ - Two versions of `add_values` end up in binary
+ - Optimized separately and very fast to run (static dispatch)
+ - Slow to compile and larger binary
 
 ---
-
-## layout: default
+layout: default
+---
 
 # Dynamic dispatch
-
-_What if don't know the concrete type implementing the trait at compile time?_
+*What if don't know the concrete type implementing the trait at compile time?*
 
 ```rust{all|1-8|10-12|14-23|17-20}
 use std::io::Write;
@@ -134,22 +118,22 @@ fn log<L: Write>(entry: &str, logger: &mut L) {
 }
 
 fn main() {
-    let log_file: Option<PathBuf> =
+    let log_file: Option<PathBuf> = 
         todo!("read args");
     let mut logger = match log_file {
         Some(log_path) => FileLogger { log_path },
         Nome => StdOutLogger,
     };
-
+    
     log("Hello, world!🦀", &mut logger);
 }
 ```
 
 ---
-
-## layout: default
-
+layout: default
+---
 # Error!
+
 
 ```txt
 error[E0308]: `match` arms have incompatible types
@@ -165,15 +149,14 @@ error[E0308]: `match` arms have incompatible types
    | |_____- `match` arms have incompatible types
 ```
 
-_What's the type of `logger`?_
+*What's the type of `logger`?*
 
 ---
-
-## layout: default
+layout: default
+---
 
 # Heterogeneous collections
-
-_What if we want to create collections of different types implementing the same trait?_
+*What if we want to create collections of different types implementing the same trait?*
 
 ```rust{all|1-13|15-21}
 trait Render {
@@ -201,11 +184,10 @@ fn main() {
 ```
 
 ---
-
-## layout: default
+layout: default
+---
 
 # Error again!
-
 ```txt
    Compiling playground v0.0.1 (/playground)
 error[E0308]: mismatched types
@@ -223,12 +205,11 @@ For more information about this error, try `rustc --explain E0308`.
 error: could not compile `playground` due to previous error
 ```
 
-_What is the type of `shapes`?_
+*What is the type of `shapes`?*
 
 ---
-
-## layout: default
-
+layout: default
+---
 # Trait objects to the rescue
 
 - Opaque type that implements a set of traits
@@ -238,7 +219,7 @@ _What is the type of `shapes`?_
 
 ```rust{all|5-7}
 fn main() {
-    let log_file: Option<PathBuf> =
+    let log_file: Option<PathBuf> = 
         todo!("read args");
     // Create a trait object that implements `Write`
     let logger: &mut dyn Write = match log_file {
@@ -247,17 +228,16 @@ fn main() {
     };
 }
 ```
-
+---
+layout: two-cols
 ---
 
-## layout: two-cols
-
-# Layout of trait objects
+# Layout of trait objects 
 
 ```rust
 /// Same code as last slide
 fn main() {
-    let log_file: Option<PathBuf> =
+    let log_file: Option<PathBuf> = 
         todo!("read args");
     // Create a trait object that implements `Write`
     let logger: &mut dyn Write = match log_file {
@@ -268,21 +248,20 @@ fn main() {
     log("Hello, world!🦀", &mut logger);
 }
 ```
-
 <v-click>
 
-- _💸 Cost: pointer indirection via vtable &rarr; less performant_
-- _💰 Benefit: no monomorphization &rarr; smaller binary & shorter compile time!_
-  </v-click>
+- *💸 Cost: pointer indirection via vtable &rarr; less performant*
+- *💰 Benefit: no monomorphization &rarr; smaller binary & shorter compile time!*
+</v-click>
 
 ::right::
-
 <!-- TODO switch out this JPEG for an SVG that works both in dark and light theme -->
 <img src="/images/D-trait-object-layout.jpg" style="margin-left:5%; margin-top: 50px; max-width: 100%; max-height: 90%;">
 
----
 
-## layout: default
+---
+layout: default
+---
 
 # Fixing dynamic logger
 
@@ -295,7 +274,7 @@ fn log<L: Write + ?Sized>(entry: &str, logger: &mut L) {
 }
 
 fn main() {
-    let log_file: Option<PathBuf> =
+    let log_file: Option<PathBuf> = 
         todo!("read args");
     // Create a trait object that implements `Write`
     let logger: &mut dyn Write = match log_file {
@@ -306,12 +285,11 @@ fn main() {
     log("Hello, world!🦀", logger);
 }
 ```
-
 And all is well!
 
 ---
-
-## layout: default
+layout: default
+---
 
 # Forcing dynamic dispatch
 
@@ -323,7 +301,7 @@ fn log(entry: &str, logger: &mut dyn Write) {
 }
 
 fn main() {
-    let log_file: Option<PathBuf> =
+    let log_file: Option<PathBuf> = 
         todo!("read args");
     // Create a trait object that implements `Write`
     let logger: &mut dyn Write = match log_file {
@@ -337,8 +315,8 @@ fn main() {
 ```
 
 ---
-
-## layout: default
+layout: default
+---
 
 # Fixing the renderer
 
@@ -352,7 +330,6 @@ fn main() {
     shapes.iter().for_each(|shape| shape.paint());
 }
 ```
-
 <v-click>
 Becomes
 
@@ -371,8 +348,8 @@ All set!
 </v-click>
 
 ---
-
-## layout: default
+layout: default
+---
 
 # Trait object limitations
 
@@ -381,46 +358,47 @@ All set!
 - Type erasure
 - Not all traits work:
 
-_Traits need to be 'Object Safe'_
+*Traits need to be 'Object Safe'*
+
 
 ---
-
-## layout: default
+layout: default
+---
 
 # Object safety
 
 In order for a trait to be object safe, these conditions need to be met:
 
 - If `trait T: Y`, then`Y` must be object safe
-- trait `T` must not be `Sized`: _Why?_
-- No associated constants allowed\*
-- No associated types with generic allowed\*
+- trait `T` must not be `Sized`: *Why?*
+- No associated constants allowed*
+- No associated types with generic allowed*
 - All associated functions must either be dispatchable from a trait object, or explicitly non-dispatchable
-  - e.g. function must have a receiver with a reference to `Self`
+    - e.g. function must have a receiver with a reference to `Self`
 
 Details in [The Rust Reference](https://doc.rust-lang.org/reference/items/traits.html#object-safety). Read them!
 
-\*These seem to be compiler limitations
+*These seem to be compiler limitations
 
 ---
-
-## layout: default
+layout: default
+---
 
 # So far...
 
-- Trait objects allow for dynamic dispatch and heterogeneous
+- Trait objects allow for dynamic dispatch and heterogeneous 
 - Trait objects introduce pointer indirection
 - Traits need to be object safe to make trait objects out of them
 
 ---
-
-## layout: section
+layout: section
+---
 
 # Design patterns in Rust
 
 ---
-
-## layout: default
+layout: default
+---
 
 # Why learn design patterns?
 
@@ -429,11 +407,11 @@ Details in [The Rust Reference](https://doc.rust-lang.org/reference/items/traits
 - Speed up development
 - Rust does some patterns ever-so-slightly differently
 
-_Learning common Rust patterns makes understanding new code easier_
+*Learning common Rust patterns makes understanding new code easier*
 
 ---
-
-## layout: default
+layout: default
+---
 
 # What we'll do
 
@@ -454,19 +432,17 @@ fn main() {
 ```
 
 ---
-
-## layout: statement
+layout: statement
+---
 
 # 1. The Newtype pattern
-
 a small but useful pattern
 
 ---
-
-## layout: default
+layout: default
+---
 
 # Newtype: introduction
-
 &nbsp;
 
 ### Wrap an external type in a new local type
@@ -478,8 +454,8 @@ pub struct Imei(String)
 That's it!
 
 ---
-
-## layout: default
+layout: default
+---
 
 # Newtype: example
 
@@ -509,28 +485,26 @@ fn register_phone(imei: Imei, label: String) {
 ```
 
 ---
-
-## layout: default
+layout: default
+---
 
 # Newtype: when to use
 
 Newtype solves some problems:
-
 - Orphan rule: no `impl`s for external `trait`s on external types
 - Allow for semantic typing (`url` example from mod B)
 - Enforce input validation
 
 ---
-
-## layout: statement
+layout: statement
+---
 
 # 2. The RAII guard pattern
-
 More robust resource handling
 
 ---
-
-## layout: default
+layout: default
+---
 
 # RAII Guards: introduction
 
@@ -539,11 +513,11 @@ More robust resource handling
 - Guard constructor initializes resource, destructor frees it
 - Access resource through the guard
 
-_Do you know of an example?_
+*Do you know of an example?*
 
 ---
-
-## layout: two-cols
+layout: two-cols
+---
 
 # RAII Guards: example
 
@@ -557,7 +531,7 @@ pub struct Transaction<'c> {
 impl<'c> Transaction<'c> {
     pub fn begin(connection: &'c mut Connection)
      -> Self {
-        let id =
+        let id = 
             connection.start_transaction();
         Self {
             did_commit: false,
@@ -573,9 +547,7 @@ impl<'c> Transaction<'c> {
     }
 }
 ```
-
 ::right::
-
 <div style="padding-left:10px; padding-top: 50px;">
 
 ```rust
@@ -585,7 +557,7 @@ impl Drop for Transaction<'_> {
             self
                 .connection
                 .commit_transaction(self.id);
-
+            
         } else {
             self
                 .connection
@@ -594,12 +566,11 @@ impl Drop for Transaction<'_> {
     }
 }
 ```
-
 </div>
 
 ---
-
-## layout: default
+layout: default
+---
 
 # RAII Guards: when to use
 
@@ -607,37 +578,33 @@ impl Drop for Transaction<'_> {
 - Ensure invariants hold while guard lives
 
 ---
-
-## layout: statement
+layout: statement
+---
 
 # 3. The Typestate pattern
-
 Encode state in the type
 
 ---
-
-## layout: default
+layout: default
+---
 
 # Typestate: introduction
 
 - Define uninitializable types for each state of your object
-
 ```rust
 pub enum Ready {} // No variants, cannot be initialized
 ```
-
 <v-click>
 
 - Make your type generic over its state using `std::marker::PhantomData`
 - Implement methods only for relevant states
 - Methods that update state take owned `self` and return instance with new state
 
-_👻 `PhantomData<T>` makes types act like they own a `T`, and takes no space_
+*👻 `PhantomData<T>` makes types act like they own a `T`, and takes no space*
 </v-click>
-
 ---
-
-## layout: two-cols
+layout: two-cols
+---
 
 # Typestate: example
 
@@ -669,7 +636,6 @@ impl CoffeeMachine<Idle> {
 ```
 
 ::right::
-
 <div style="padding-left:10px; padding-top: 0;">
 
 ```rust
@@ -694,29 +660,27 @@ impl CoffeeMachine<MoneyInserted> {
     }
 }
 ```
-
 </div>
 
 ---
-
-## layout: default
+layout: default
+---
 
 # Typestate: when to use
 
 - If your problem is like a state machine
-- Ensure _at compile time_ that no invalid operation is done
+- Ensure *at compile time* that no invalid operation is done
 
 ---
-
-## layout: statement
+layout: statement
+---
 
 # 4. The Strategy pattern
-
 Select behavior dynamically
 
 ---
-
-## layout: default
+layout: default
+---
 
 # Strategy: introduction
 
@@ -724,11 +688,11 @@ Select behavior dynamically
 - Make them interchangeble inside context
 - Execute strategy depending on input
 
-_Trait objects work well here!_
+*Trait objects work well here!*
 
 ---
-
-## layout: two-cols
+layout: two-cols
+---
 
 # Strategy: example
 
@@ -752,7 +716,6 @@ impl PaymentStrategy for CardPayment {
     }
 }
 ```
-
 ::right::
 
 <div style="padding-left:10px; padding-top: 50px;">
@@ -760,9 +723,9 @@ impl PaymentStrategy for CardPayment {
 ```rust
 
 fn main() {
-    let method: &str
+    let method: &str 
         = todo!("Read input");
-    let strategy: &dyn PaymentStrategy
+    let strategy: &dyn PaymentStrategy 
         = match method {
         "card" => &CardPayment,
         "cash" => &CashPayment,
@@ -772,35 +735,34 @@ fn main() {
 }
 ```
 
-</div>
+</div> 
 
 ---
-
-## layout: default
+layout: default
+---
 
 # Strategy: when to use
 
 - Switch algorithms based on some run-time parameter (input, config, ...)
 
 ---
-
-## layout: section
-
-# Anti-patterns
-
-What _not_ to do
-
+layout: section
 ---
 
-## layout: section
+# Anti-patterns
+What *not* to do
+
+---
+layout: section
+---
 
 # The Deref polymorphism anti-pattern
 
 A common pitfall you'll want to avoid
 
 ---
-
-## layout: two-cols
+layout: two-cols
+---
 
 # Deref polymorphism: Example
 
@@ -824,9 +786,7 @@ impl Animal {
     }
 }
 ```
-
 ::right::
-
 ```rust
 struct Dog {
     animal: Animal
@@ -848,7 +808,7 @@ impl Deref for Dog {
     }
 }
 
-fn main (){
+fn main (){ 
     let dog: Dog = todo!("Instantiate Dog");
     dog.bark();
     dog.walk();
@@ -858,8 +818,8 @@ fn main (){
 ```
 
 ---
-
-## layout: default
+layout: default
+---
 
 # The output
 
@@ -870,11 +830,11 @@ Munch munch
 ...
 ```
 
-_Even overloading works!_
+*Even overloading works!*
 
 ---
-
-## layout: default
+layout: default
+---
 
 # Why is it bad?
 
@@ -884,24 +844,24 @@ _Even overloading works!_
 - Deref coercion by `.` 'converts' `self` from `Dog` to `Animal`
 - Rust favours explicit conversions for easier reasoning about code
 
-_It will only add confusion: for OOP programmers it's incomplete, for Rust programmers it is unidiomatic_
+*It will only add confusion: for OOP programmers it's incomplete, for Rust programmers it is unidiomatic*
 
 ## ⚠️ Don't do OOP in Rust!
 
 ---
-
-## layout: default
+layout: default
+---
 
 # What to do instead?
 
-- _Move away from OOP constructs_
+- *Move away from OOP constructs*
 - Compose your structs
 - Use facade methods
 - Use `AsRef` and `AsMut` for explicit conversion
 
 ---
-
-## layout: default
+layout: default
+---
 
 # More anti-patterns
 
@@ -909,12 +869,11 @@ _It will only add confusion: for OOP programmers it's incomplete, for Rust progr
 - `clone()` _to satisfy the borrow checker_
 - `unwrap()` or `expect()` _to handle conditions that are recoverable or not impossible_
 
+
 ---
-
-## layout: default
-
+layout: default
+---
 # Summary
-
 - Trait objects allow for heterogeneous collections and dynamic dispatch
 - Use design patterns to address common problems
 - Don't do OOP in Rust!

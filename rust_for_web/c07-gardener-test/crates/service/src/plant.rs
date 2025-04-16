@@ -2,7 +2,7 @@ use crate::error::ServiceError;
 use async_trait::async_trait;
 use futures::TryStreamExt;
 use model::plant::Plant;
-use mongodb::Collection;
+use mongodb::{bson::Document, Collection};
 
 #[async_trait]
 pub trait PlantService {
@@ -17,7 +17,7 @@ pub struct PlantServiceImpl {
 #[async_trait]
 impl PlantService for PlantServiceImpl {
     async fn get_all(&self) -> Result<Vec<Plant>, ServiceError> {
-        let res = self.collection.find(None, None).await?;
+        let res = self.collection.find(Document::new()).await?;
         res.try_collect().await.map_err(Into::into)
     }
 }

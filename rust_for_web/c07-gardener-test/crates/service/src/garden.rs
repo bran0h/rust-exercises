@@ -1,7 +1,7 @@
 use crate::error::ServiceError;
 use async_trait::async_trait;
 use model::garden::Garden;
-use mongodb::Collection;
+use mongodb::{bson::Document, Collection};
 
 #[async_trait]
 pub trait GardenService {
@@ -16,7 +16,7 @@ pub struct GardenServiceImpl {
 #[async_trait]
 impl GardenService for GardenServiceImpl {
     async fn get(&self) -> Result<Garden, ServiceError> {
-        let res = self.collection.find_one(None, None).await?;
+        let res = self.collection.find_one(Document::new()).await?;
         match res {
             Some(garden) => Ok(garden),
             None => Err(ServiceError::NotFound),

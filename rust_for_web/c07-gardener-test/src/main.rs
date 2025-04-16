@@ -16,7 +16,7 @@ async fn main() -> eyre::Result<()> {
 
 async fn mock_db(database: &Database) -> eyre::Result<()> {
     // Drop existing collections
-    database.drop(None).await?;
+    database.drop().await?;
     let size = 4;
     let mut fields = Vec::<Option<GardenField>>::new();
     for _ in 0..size * size {
@@ -33,7 +33,7 @@ async fn mock_db(database: &Database) -> eyre::Result<()> {
 
     // Insert garden instance into the database
     let collection = database.collection("garden");
-    collection.insert_one(garden.clone(), None).await?;
+    collection.insert_one(garden.clone()).await?;
 
     let plant1 = model::plant::Plant {
         id: uuid::Uuid::new_v4().to_string(),
@@ -55,9 +55,9 @@ async fn mock_db(database: &Database) -> eyre::Result<()> {
 
     let collection = database.collection("plant");
 
-    collection.insert_one(plant1.clone(), None).await?;
-    collection.insert_one(plant2.clone(), None).await?;
-    collection.insert_one(plant3.clone(), None).await?;
+    collection.insert_one(plant1.clone()).await?;
+    collection.insert_one(plant2.clone()).await?;
+    collection.insert_one(plant3.clone()).await?;
 
     Ok(())
 }

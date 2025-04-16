@@ -13,22 +13,22 @@ model = { path = "crates/model" }
 routes = { path = "crates/routes" }
 service = { path = "crates/service" }
 
-axum = { version = "0.7.5", features = ["macros"] }
-serde = { version = "1.0.159", features = ["derive"] }
-tokio = { version = "1.27.0", features = ["full"] }
-async-trait = "0.1.68"
-figment = { version = "0.10.8", features = ["toml", "env"] }
-mongodb = "2.4.0"
-axum-server = "0.6.0"
+axum = { version = "0.8.3", features = ["macros"] }
+serde = { version = "1.0.219", features = ["derive"] }
+tokio = { version = "1.44.2", features = ["full"] }
+async-trait = "0.1.88"
+figment = { version = "0.10.19", features = ["toml", "env"] }
+mongodb = "3.2.3"
+axum-server = "0.7.2"
 eyre = "0.6.12"
 color-eyre = "0.6.3"
-tracing = "0.1.40"
-tracing-subscriber = "0.3.18"
-axum-extra = "0.9.3"
-futures = "0.3.30"
-thiserror = "1.0.58"
-uuid = { version = "1.8.0", features = ["serde"] }
-tower = "0.4.13"
+tracing = "0.1.41"
+tracing-subscriber = "0.3.19"
+axum-extra = "0.10.1"
+futures = "0.3.31"
+thiserror = "2.0.12"
+uuid = { version = "1.16.0", features = ["serde"] }
+tower = "0.5.2"
 
 [dependencies]
 service.workspace = true
@@ -45,5 +45,5 @@ color-eyre.workspace = true
 tracing.workspace = true
 tracing-subscriber.workspace = true
 uuid = { workspace = true, features = ["serde"] }
-tower-http = { version = "0.5.2", features = ["cors"] }
-http = "1.1.0"
+tower-http = { version = "0.6.2", features = ["cors"] }
+http = "1.3.1"

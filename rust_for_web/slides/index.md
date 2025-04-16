@@ -97,8 +97,8 @@ layout: default
 
 - static / dynamic
 - SSR / SPA / SSG (Generation / Hydration)
-- REST / SOAP 💀
-- serverless (AWS / Azure / Google / ...)
+- REST / WS / SOAP 💀
+- serverless (AWS / Azure / Supabase / Firebase / ... )
 
 
 ---

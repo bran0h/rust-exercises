@@ -1,5 +1,5 @@
 [package]
-name = "c03-diesel"
+name = "c01-axum"
 version = "0.1.0"
 edition = "2021"
 publish = false
@@ -11,9 +11,3 @@ serde_json = "1.0.68"
 tokio = { version = "1.0", features = ["full"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-libsqlite3-sys = { version = "0.28.0", features = ["bundled"] }
-diesel = { version = "2.2.9", features = [
-    "sqlite",
-    "returning_clauses_for_sqlite_3_35",
-] }
-dotenv = "0.15.0"
